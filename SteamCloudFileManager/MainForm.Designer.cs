@@ -41,6 +41,7 @@
             this.refreshButton = new System.Windows.Forms.Button();
             this.quotaLabel = new System.Windows.Forms.Label();
             this.deleteButton = new System.Windows.Forms.Button();
+            this.uploadButton = new System.Windows.Forms.Button();
             this.downloadButton = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
@@ -114,13 +115,24 @@
             this.connectButton.UseVisualStyleBackColor = true;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
+            // uploadButton
+            // 
+            this.uploadButton.Enabled = false;
+            this.uploadButton.Location = new System.Drawing.Point(245, 12);
+            this.uploadButton.Name = "uploadButton";
+            this.uploadButton.Size = new System.Drawing.Size(75, 23);
+            this.uploadButton.TabIndex = 4;
+            this.uploadButton.Text = "Upload";
+            this.uploadButton.UseVisualStyleBackColor = true;
+            this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
+            // 
             // refreshButton
             // 
             this.refreshButton.Enabled = false;
-            this.refreshButton.Location = new System.Drawing.Point(245, 12);
+            this.refreshButton.Location = new System.Drawing.Point(326, 12);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(75, 23);
-            this.refreshButton.TabIndex = 4;
+            this.refreshButton.TabIndex = 5;
             this.refreshButton.Text = "Refresh";
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
@@ -129,10 +141,10 @@
             // 
             this.quotaLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.quotaLabel.Location = new System.Drawing.Point(326, 9);
+            this.quotaLabel.Location = new System.Drawing.Point(407, 9);
             this.quotaLabel.Name = "quotaLabel";
-            this.quotaLabel.Size = new System.Drawing.Size(280, 23);
-            this.quotaLabel.TabIndex = 5;
+            this.quotaLabel.Size = new System.Drawing.Size(199, 23);
+            this.quotaLabel.TabIndex = 6;
             this.quotaLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // deleteButton
@@ -142,7 +154,7 @@
             this.deleteButton.Location = new System.Drawing.Point(93, 232);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(75, 23);
-            this.deleteButton.TabIndex = 6;
+            this.deleteButton.TabIndex = 7;
             this.deleteButton.Text = "Delete";
             this.deleteButton.UseVisualStyleBackColor = true;
             this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
@@ -154,7 +166,7 @@
             this.downloadButton.Location = new System.Drawing.Point(12, 232);
             this.downloadButton.Name = "downloadButton";
             this.downloadButton.Size = new System.Drawing.Size(75, 23);
-            this.downloadButton.TabIndex = 7;
+            this.downloadButton.TabIndex = 8;
             this.downloadButton.Text = "Download";
             this.downloadButton.UseVisualStyleBackColor = true;
             this.downloadButton.Click += new System.EventHandler(this.downloadButton_Click);
@@ -173,6 +185,7 @@
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.remoteListView);
             this.Controls.Add(this.quotaLabel);
+            this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.appIdTextBox);
@@ -195,6 +208,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox appIdTextBox;
         private System.Windows.Forms.Button connectButton;
+        private System.Windows.Forms.Button uploadButton;
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.Label quotaLabel;

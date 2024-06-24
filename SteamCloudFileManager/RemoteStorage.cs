@@ -37,6 +37,12 @@ namespace SteamCloudFileManager
             }
         }
 
+        public void UploadFile(string filePath)
+        {
+            var data = File.ReadAllBytes(filePath);
+            SteamRemoteStorage.FileWrite(Path.GetFileName(filePath), data, data.Length);
+        }
+
         internal RemoteStorage(uint appID)
         {
             Environment.SetEnvironmentVariable("SteamAppID", appID.ToString());
@@ -80,7 +86,7 @@ namespace SteamCloudFileManager
             return new RemoteFile(this, name.ToLowerInvariant());
         }
 
-        public bool GetQuota(out int totalBytes, out int availableBytes)
+        public bool GetQuota(out ulong totalBytes, out ulong availableBytes)
         {
             checkDisposed();
             return SteamRemoteStorage.GetQuota(out totalBytes, out availableBytes);

@@ -36,6 +36,7 @@ namespace SteamCloudFileManager
                 }
                 storage = RemoteStorage.CreateInstance(uint.Parse(appIdTextBox.Text));
                 //storage = new RemoteStorageLocal("remote", uint.Parse(appIdTextBox.Text));
+                uploadButton.Enabled = true;
                 refreshButton.Enabled = true;
                 refreshButton_Click(this, EventArgs.Empty);
             }
@@ -73,7 +74,7 @@ namespace SteamCloudFileManager
         void updateQuota()
         {
             if (storage == null) throw new InvalidOperationException("Not connected");
-            int totalBytes, availBytes;
+            ulong totalBytes, availBytes;
             storage.GetQuota(out totalBytes, out availBytes);
             quotaLabel.Text = string.Format("{0}/{1} bytes used", totalBytes - availBytes, totalBytes);
         }
@@ -148,6 +149,30 @@ namespace SteamCloudFileManager
 
             updateQuota();
             if (allSuccess) MessageBox.Show(this, "Files deleted.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        private void uploadButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            // Set filter options and filter index
+            openFileDialog.Filter = "All Files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+
+            // Process input if the user clicked OK
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                // Get the path of specified file
+                string filePath = openFileDialog.FileName;
+
+                // Store the file path to a variable
+                // You can now use the filePath variable for further processing
+                storage.UploadFile(filePath);
+                // Example: You could read the file here
+                // string fileContent = System.IO.File.ReadAllText(filePath);
+                // MessageBox.Show(fileContent, "File Content", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void remoteListView_SelectedIndexChanged(object sender, EventArgs e)

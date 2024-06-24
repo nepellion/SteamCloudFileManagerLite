@@ -39,11 +39,11 @@ namespace SteamCloudFileManager
             return files;
         }
 
-        public bool GetQuota(out int totalBytes, out int availableBytes)
+        public bool GetQuota(out ulong totalBytes, out ulong availableBytes)
         {
             DriveInfo di = new DriveInfo(Path.GetPathRoot(Path.GetFullPath(basePath)));
-            totalBytes = di.TotalSize > int.MaxValue ? int.MaxValue : (int)di.TotalSize;
-            availableBytes = di.AvailableFreeSpace > int.MaxValue ? int.MaxValue : (int)di.AvailableFreeSpace;
+            totalBytes = di.TotalSize < 0 ? 0 : (ulong)di.TotalSize;
+            availableBytes = di.AvailableFreeSpace < 0 ? 0 : (ulong)di.AvailableFreeSpace;
             return true;
         }
 
@@ -62,6 +62,12 @@ namespace SteamCloudFileManager
             {
                 throw new NotSupportedException();
             }
+        }
+
+        public void UploadFile(string filePath)
+        {
+            var name = Path.GetFileName(filePath);
+            File.Copy(filePath, Path.Join(basePath, name));
         }
     }
 }
