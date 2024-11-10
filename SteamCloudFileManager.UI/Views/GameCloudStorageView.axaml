@@ -24,7 +24,7 @@
 
         <Style Selector="#FileTableItems Grid > TextBlock">
             <Setter Property="Padding" Value="5" />
-            <Setter Property="Background" Value="#222222" />
+            <Setter Property="Background" Value="#99222222" />
             <Setter Property="Margin" Value="2, 0" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="TextWrapping" Value="Wrap" />
@@ -39,6 +39,16 @@
         <Style Selector="ToolTip TextBlock">
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="TextAlignment" Value="Left"/>
+        </Style>
+        
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        
+
+        <!--  PointerOver State  -->
+        <Style Selector="ListBoxItem:pointerover">
+            <Setter Property="Cursor" Value="Hand" />
         </Style>
     </UserControl.Styles>
 
@@ -102,11 +112,6 @@
                 <ListBox Name="FileTableItems" ItemsSource="{Binding Files}"
                          SelectedItem="{Binding SelectedFile, Mode=TwoWay}" Padding="0" Margin="0"
                          Background="Transparent">
-                    <ListBox.ItemContainerTheme>
-                        <ControlTheme TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="0" />
-                        </ControlTheme>
-                    </ListBox.ItemContainerTheme>
                     <ListBox.DataTemplates>
                         <DataTemplate x:DataType="lib:IRemoteFile">
                             <Grid Margin="0, 1" ColumnDefinitions="*,200,70,70,70">

@@ -150,7 +150,7 @@ public class GameCloudStorageViewModel : ViewModelBase
         await stream.FlushAsync();
 
         ShowDialog("File downloaded",
-            $"file has been successfully downloaded as {Path.Combine(downloadFile.Path.AbsolutePath, downloadFile.Name)}",
+            $"file has been successfully downloaded as {downloadFile.Path.AbsolutePath}",
             DialogType.Info);
     }
 
@@ -177,9 +177,11 @@ public class GameCloudStorageViewModel : ViewModelBase
 
         await using var stream = await fileToUpload.OpenReadAsync();
 
-        var memory = new Memory<byte>();
-
-        var bytesRead = await stream.ReadAsync(memory);
+        if(stream.Length > int.MaxValue)
+            throw new InvalidOperationException("File is too large to be uploaded.");
+        
+        var fileBuffer = new byte[stream.Length];
+        var bytesRead = await stream.ReadAsync(fileBuffer.AsMemory(0, (int)stream.Length));
 
         if (bytesRead < 0 || (ulong)bytesRead != fileSize.Value)
         {
@@ -187,11 +189,13 @@ public class GameCloudStorageViewModel : ViewModelBase
             return;
         }
 
-        gameStorageModel.Current?.UploadFile(fileToUpload.Name, memory.ToArray());
+        gameStorageModel.Current?.UploadFile(fileToUpload.Name, fileBuffer);
 
         ShowDialog("File uploaded", "File has been successfully uploaded.", DialogType.Info);
 
         UpdateQuota();
+        
+        RefreshFiles();
     }
 
     void DeleteFile()
