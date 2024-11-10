@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SteamCloudFileManager
+﻿namespace SteamCloudFileManager.Lib
 {
-    interface IRemoteStorage
+    public interface IRemoteStorage
     {
         IRemoteFile GetFile(string name);
         List<IRemoteFile> GetFiles();
@@ -11,5 +8,6 @@ namespace SteamCloudFileManager
         bool IsCloudEnabledForAccount { get; }
         bool IsCloudEnabledForApp { get; set; }
         void UploadFile(string filePath);
+        void UploadFile(string fileName, byte[] data);
     }
 }

@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SteamCloudFileManager.UI.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:converters="using:SteamCloudFileManager.UI.Converters"
+             x:Class="SteamCloudFileManager.UI.Views.GameSelectionView"
+             x:DataType="vm:GameSelectionViewModel"
+             x:CompileBindings="True"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+        <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter" />
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical" Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock VerticalAlignment="Center" Text="AppID or Store URL:" />
+            <TextBox VerticalAlignment="Center" MinWidth="150" Text="{Binding AppIdInput, Mode=TwoWay}" />
+        </StackPanel>
+        <Button HorizontalAlignment="Stretch"
+                Command="{Binding SelectGameCommand}"
+                IsEnabled="{Binding AppIdInput, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+            Continue
+        </Button>
+    </StackPanel>
+</UserControl>

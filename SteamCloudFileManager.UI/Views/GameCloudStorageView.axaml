@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SteamCloudFileManager.UI.ViewModels"
+             xmlns:converters="using:SteamCloudFileManager.UI.Converters"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:lib="clr-namespace:SteamCloudFileManager.Lib;assembly=SteamCloudFileManager.Lib"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SteamCloudFileManager.UI.Views.GameCloudStorageView"
+             x:DataType="vm:GameCloudStorageViewModel"
+             x:CompileBindings="True"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+        <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="#FileTableHeader > TextBlock">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Background" Value="#111111" />
+            <Setter Property="Margin" Value="2, 0" />
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style Selector="#FileTableItems Grid > TextBlock">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Background" Value="#222222" />
+            <Setter Property="Margin" Value="2, 0" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+        
+        <Style Selector="#FileTableItems CheckBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        
+        <Style Selector="ToolTip TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+        </Style>
+    </UserControl.Styles>
+
+    <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top" Margin="5" ColumnDefinitions="Auto,Auto,*" HorizontalAlignment="Stretch">
+            <Button Grid.Column="0" Command="{Binding ReturnToGameSelectionCommand}">Back</Button>
+            <Button Grid.Column="1" Command="{Binding RefreshFilesCommand}">Refresh</Button>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
+                       ToolTip.Placement="Bottom">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0} available, {1} used (max {2})">
+                        <Binding Path="Available.HumanReadable" />
+                        <Binding Path="Used.HumanReadable" />
+                        <Binding Path="Total.HumanReadable" />
+                    </MultiBinding>
+                </TextBlock.Text>
+                <ToolTip.Tip>
+                    <MultiBinding StringFormat="({1:0}/{2:0}, ({0:0} available))">
+                        <Binding Path="Available.Bytes" />
+                        <Binding Path="Used.Bytes" />
+                        <Binding Path="Total.Bytes" />
+                    </MultiBinding>
+                </ToolTip.Tip>
+            </TextBlock>
+        </Grid>
+
+        <Grid DockPanel.Dock="Bottom" Margin="5" ColumnDefinitions="Auto,*,Auto">
+            <StackPanel Orientation="Horizontal">
+                <Button IsEnabled="{Binding SelectedFile, Converter={StaticResource IsNotNullConverter}}"
+                        Command="{Binding DownloadFileCommand}">
+                    Download
+                </Button>
+                <Button IsEnabled="{Binding SelectedFile, Converter={StaticResource IsNotNullConverter}}"
+                        Command="{Binding DeleteFileCommand}"
+                        Background="{StaticResource ErrorColor}">
+                    Delete
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <Button Command="{Binding UploadFileCommand}">Upload</Button>
+
+                <Button HorizontalAlignment="Right"
+                        Command="{Binding DeleteAllFilesCommand}"
+                        Background="{StaticResource ErrorColor}">
+                    Delete ALL
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <DockPanel Margin="5" LastChildFill="True">
+            <Grid DockPanel.Dock="Top" Name="FileTableHeader" Margin="0, 2" ColumnDefinitions="*,200,70,80,60">
+                <TextBlock Grid.Column="0" Text="Name" />
+                <TextBlock Grid.Column="1" Text="Timestamp" />
+                <TextBlock Grid.Column="2" Text="Size" />
+                <TextBlock Grid.Column="3" Text="Persistent" />
+                <TextBlock TextAlignment="Right" Grid.Column="4" Text="Exists" />
+            </Grid>
+
+            <ScrollViewer>
+                <ListBox Name="FileTableItems" ItemsSource="{Binding Files}"
+                         SelectedItem="{Binding SelectedFile, Mode=TwoWay}" Padding="0" Margin="0"
+                         Background="Transparent">
+                    <ListBox.ItemContainerTheme>
+                        <ControlTheme TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0" />
+                        </ControlTheme>
+                    </ListBox.ItemContainerTheme>
+                    <ListBox.DataTemplates>
+                        <DataTemplate x:DataType="lib:IRemoteFile">
+                            <Grid Margin="0, 1" ColumnDefinitions="*,200,70,70,70">
+                                <TextBlock Grid.Column="0" Text="{Binding Name}" ToolTip.Tip="{Binding Name}" />
+                                <TextBlock Grid.Column="1" Text="{Binding LastModified}" ToolTip.Tip="{Binding Timestamp}" />
+                                <TextBlock Grid.Column="2" Text="{Binding Size.HumanReadable}" ToolTip.Tip="{Binding Size.Bytes}" />
+                                <CheckBox Grid.Column="3" IsEnabled="False" IsChecked="{Binding IsPersisted}"/>
+                                <CheckBox Grid.Column="4" IsEnabled="False" IsChecked="{Binding Exists}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.DataTemplates>
+                </ListBox>
+            </ScrollViewer>
+        </DockPanel>
+    </DockPanel>
+</UserControl>

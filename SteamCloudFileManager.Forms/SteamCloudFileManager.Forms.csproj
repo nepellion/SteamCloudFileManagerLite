@@ -17,15 +17,7 @@
     <ApplicationIcon>cloud.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Steamworks.NET">
-      <HintPath>..\lib\Windows-x64\Steamworks.NET.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\lib\Windows-x64\steam_api64.dll">
-      <Link>steam_api64.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\SteamCloudFileManager.Lib\SteamCloudFileManager.Lib.csproj" />
   </ItemGroup>
 
 </Project>

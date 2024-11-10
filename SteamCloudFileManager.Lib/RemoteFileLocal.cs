@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using Steamworks;
+﻿using Steamworks;
 
-namespace SteamCloudFileManager
+namespace SteamCloudFileManager.Lib
 {
-    class RemoteFileLocal : IRemoteFile
+    public class RemoteFileLocal : IRemoteFile
     {
         string path;
         FileInfo fi;
@@ -62,15 +57,12 @@ namespace SteamCloudFileManager
 
         public byte[] ReadAllBytes()
         {
-            byte[] buffer = new byte[Size];
+            byte[] buffer = new byte[Size.Bytes];
             Read(buffer, buffer.Length);
             return buffer;
         }
 
-        public int Size
-        {
-            get { return (int)fi.Length; }
-        }
+        public RemoteFileSize Size => new((ulong)fi.Length);
 
         public ERemoteStoragePlatform SyncPlatforms
         {
@@ -84,10 +76,9 @@ namespace SteamCloudFileManager
             }
         }
 
-        public DateTime Timestamp
-        {
-            get { return fi.LastWriteTime; }
-        }
+        public long Timestamp => ((DateTimeOffset)fi.LastWriteTimeUtc).ToUnixTimeSeconds();
+        
+        public DateTime LastModified => fi.LastWriteTime;
 
         public bool Write(byte[] buffer, int count)
         {

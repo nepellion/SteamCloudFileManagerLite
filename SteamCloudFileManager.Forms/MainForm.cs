@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
+﻿using SteamCloudFileManager.Lib;
 
-namespace SteamCloudFileManager
+namespace SteamCloudFileManager.Forms
 {
     public partial class MainForm : Form
     {
@@ -60,7 +52,7 @@ namespace SteamCloudFileManager
                 remoteListView.Items.Clear();
                 foreach (IRemoteFile file in files)
                 {
-                    ListViewItem itm = new ListViewItem(new string[] { file.Name, file.Timestamp.ToString(), file.Size.ToString(), file.IsPersisted.ToString(), file.Exists.ToString() }) { Tag = file };
+                    ListViewItem itm = new ListViewItem(new string[] { file.Name, file.LastModified.ToString(), file.Size.Bytes.ToString(), file.IsPersisted.ToString(), file.Exists.ToString() }) { Tag = file };
                     remoteListView.Items.Add(itm);
                 }
                 updateQuota();

@@ -219,3 +219,9 @@ $RECYCLE.BIN/
 
 lib
 .idea
+
+# Steamworks libraries
+steam_api.dll
+steam_api64.dll
+libsteam_api.dylib
+libsteam_api.so

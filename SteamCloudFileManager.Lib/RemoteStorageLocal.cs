@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-namespace SteamCloudFileManager
+﻿namespace SteamCloudFileManager.Lib
 {
     /// <summary>
     /// Dummy local implementation of RemoteStorage interface for offline testing
     /// </summary>
-    class RemoteStorageLocal : IRemoteStorage
+    public class RemoteStorageLocal : IRemoteStorage
     {
         string basePath;
         uint appId;
@@ -69,5 +63,8 @@ namespace SteamCloudFileManager
             var name = Path.GetFileName(filePath);
             File.Copy(filePath, Path.Join(basePath, name));
         }
+
+        public void UploadFile(string fileName, byte[] data) 
+            => File.WriteAllBytes(Path.Join(basePath, fileName), data);
     }
 }

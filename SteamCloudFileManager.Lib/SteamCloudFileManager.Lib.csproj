@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+      net8.0;net8.0-macos
+    </TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>1.0.0-md001</Version>
+    <AssemblyTitle>Steam Cloud File Manager Lite</AssemblyTitle>
+    <AssemblyDescription>View, download, or delete Steam Cloud files.</AssemblyDescription>
+    <Company>GMWare</Company>
+    <Product>Steam Cloud File Manager</Product>
+    <Copyright>Copyright © cyanic 2014-2015</Copyright>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Steamworks.NET" Version="2024.8.0" />
+  </ItemGroup>
+
+  <!-- Include steam_api64.dll in Windows builds -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+    <_NativeFile Include="steam_api64.dll">
+      <Dir Condition="$(Configuration) == 'Debug'">runtimes/win-x64/native/</Dir>
+    </_NativeFile>
+  </ItemGroup>
+  
+  <!-- Include libsteam_api.dylib in MacOS builds -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-macos'">
+    
+    <_NativeFile Include="libsteam_api.dylib" >
+      <Dir Condition="$(Configuration) == 'Debug'">runtimes/osx-x64/native/</Dir>
+    </_NativeFile>
+  </ItemGroup>
+
+  <!-- Include libsteam_api.so in Linux builds -->
+  <!-- Note: linux currently uses 'net8.0' as target framework in Avalonia -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <_NativeFile Include="libsteam_api.so">
+      <Dir Condition="$(Configuration) == 'Debug'">runtimes/linux-x64/native/</Dir>
+    </_NativeFile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="@(_NativeFile)">
+      <Link>%(Dir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

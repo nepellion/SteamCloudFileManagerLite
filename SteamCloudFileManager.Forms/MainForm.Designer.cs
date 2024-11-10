@@ -1,4 +1,4 @@
-﻿namespace SteamCloudFileManager
+﻿namespace SteamCloudFileManager.Lib
 {
     partial class MainForm
     {

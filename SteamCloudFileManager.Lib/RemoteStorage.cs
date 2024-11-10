@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.Diagnostics;
 using Steamworks;
 
-namespace SteamCloudFileManager
+namespace SteamCloudFileManager.Lib
 {
-    class RemoteStorage : IRemoteStorage, IDisposable
+    public class RemoteStorage : IRemoteStorage, IDisposable
     {
-        static RemoteStorage instance;
+        static RemoteStorage? instance;
         static object sync = new object();
 
         internal bool IsDisposed { get; private set; }
@@ -27,25 +23,26 @@ namespace SteamCloudFileManager
         {
             get
             {
-                checkDisposed();
+                CheckDisposed();
                 return SteamRemoteStorage.IsCloudEnabledForApp();
             }
             set
             {
-                checkDisposed();
+                CheckDisposed();
                 SteamRemoteStorage.SetCloudEnabledForApp(value);
             }
         }
 
         public void UploadFile(string filePath)
-        {
-            var data = File.ReadAllBytes(filePath);
-            SteamRemoteStorage.FileWrite(Path.GetFileName(filePath), data, data.Length);
-        }
+            => UploadFile(Path.GetFileName(filePath), File.ReadAllBytes(filePath));
+        
+        public void UploadFile(string fileName, byte[] data) 
+            => SteamRemoteStorage.FileWrite(fileName, data, data.Length);
 
-        internal RemoteStorage(uint appID)
+        RemoteStorage(uint appID)
         {
             Environment.SetEnvironmentVariable("SteamAppID", appID.ToString());
+            
             bool init = SteamAPI.Init();
             if (!init)
             {
@@ -56,8 +53,10 @@ namespace SteamCloudFileManager
                     init = SteamAPI.Init();
                     File.Delete("steam_appid.txt");
                 }
-                catch
-                { }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"Error initializing using a steam_appid.txt file: {ex.Message}");
+                }
             }
 
             if (!init) throw new Exception("Cannot initialize Steamworks API.");
@@ -65,9 +64,9 @@ namespace SteamCloudFileManager
 
         public List<IRemoteFile> GetFiles()
         {
-            checkDisposed();
+            CheckDisposed();
             List<IRemoteFile> files = new List<IRemoteFile>();
-
+            
             int fileCount = SteamRemoteStorage.GetFileCount();
             for (int i = 0; i < fileCount; ++i)
             {
@@ -82,17 +81,17 @@ namespace SteamCloudFileManager
 
         public IRemoteFile GetFile(string name)
         {
-            checkDisposed();
+            CheckDisposed();
             return new RemoteFile(this, name.ToLowerInvariant());
         }
 
         public bool GetQuota(out ulong totalBytes, out ulong availableBytes)
         {
-            checkDisposed();
+            CheckDisposed();
             return SteamRemoteStorage.GetQuota(out totalBytes, out availableBytes);
         }
 
-        void checkDisposed()
+        void CheckDisposed()
         {
             if (IsDisposed) throw new InvalidOperationException("Instance is no longer valid.");
         }
